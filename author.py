@@ -33,7 +33,7 @@ def write_epic_book(message):
     msg = bot.reply_to(message, f"⏳ جاري التخطيط لمجلد ضخم عن: {topic}\nأقوم الآن برسم الفهرس وتحديد الفصول... 🧠")
     
     try:
-        # 1. طلب فهرس من 12 فصلاً
+         1. طلب فهرس من 12 فصلاً
         index_prompt = f"أنت مؤلف كتب عالمي. اكتب لي فهرساً يتكون من 12 فصلاً لكتاب احترافي وشامل عن '{topic}'. أريد أسماء الفصول فقط مفصولة برمز النجمة (*) بدون أي أرقام أو نصوص أخرى."
         
         index_response = client.models.generate_content(
@@ -41,22 +41,22 @@ def write_epic_book(message):
             contents=index_prompt
         )
         
-        # استخراج الفصول وتجاهل الفراغات
+         استخراج الفصول وتجاهل الفراغات
         chapters = [c.strip() for c in index_response.text.split('*') if len(c.strip()) > 3]
         
         if not chapters:
             bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text="❌ حدث خطأ في استخراج الفهرس، يرجى المحاولة بعنوان آخر.")
             return
 
-        # 2. تجهيز الوورد
+         2. تجهيز الوورد
         doc = docx.Document()
         doc.add_heading(f"كتاب: {topic}", 0)
         
-        # 3. رحلة التأليف الطويلة (حلقة تكرارية)
+         3. رحلة التأليف الطويلة (حلقة تكرارية)
         for i, chapter_title in enumerate(chapters, 1):
             bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text=f"✍️ جاري تأليف الفصل {i} من {len(chapters)}...\n(العنوان: {chapter_title})\n\nالجودة العالية تحتاج وقتاً، احتسِ قهوتك ☕...")
             
-            # هندسة الأوامر لكتابة فصل شديد الطول
+             هندسة الأوامر لكتابة فصل شديد الطول
             chapter_prompt = f"""
             أنت مؤلف كتب محترف وخبير عالمي. اكتب محتوى طويلاً جداً ومفصلاً وشاملاً (أكثر من 1500 كلمة) للفصل التالي: "{chapter_title}"
             وهو جزء من كتاب بعنوان: "{topic}".
@@ -73,16 +73,16 @@ def write_epic_book(message):
                 contents=chapter_prompt
             )
             
-            # تنظيف وإضافة الفصل
+             تنظيف وإضافة الفصل
             clean_text = clean_markdown(chapter_response.text)
             doc.add_heading(chapter_title, level=1)
             doc.add_paragraph(clean_text)
             doc.add_page_break()
             
-            # استراحة 15 ثانية للهروب من حظر جوجل وإعطاء الذكاء الاصطناعي فرصة للتنفس
+             استراحة 15 ثانية للهروب من حظر جوجل وإعطاء الذكاء الاصطناعي فرصة للتنفس
             time.sleep(15)
 
-        # 4. حفظ وإرسال
+         4. حفظ وإرسال
         safe_topic = topic.replace(' ', '_').replace('/', '_')
         file_name = f"{safe_topic}_Epic.docx"
         doc.save(file_name)
@@ -97,7 +97,7 @@ def write_epic_book(message):
     except Exception as e:
         print(f"Error: {e}")
         bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text="❌ عذراً، انقطع الاتصال بسبب الضغط الكبير. يرجى المحاولة لاحقاً.")
-# --- بداية كود خدعة السيرفر (Flask) ---
+ --- بداية كود خدعة السيرفر (Flask) ---
 app = Flask(__name__)
 
 @app.route('/')
@@ -111,12 +111,12 @@ def keep_alive():
     t = Thread(target=run)
     t.start()
 
-# تشغيل خادم الويب الوهمي في الخلفية
+تشغيل خادم الويب الوهمي في الخلفية
 keep_alive()
-# --- نهاية كود الخدعة ---
+--- نهاية كود الخدعة ---
 
-# هنا يجب أن يكون سطر تشغيل البوت الخاص بك (موجود مسبقاً)
-# bot.polling(none_stop=True)
+هنا يجب أن يكون سطر تشغيل البوت الخاص بك (موجود مسبقاً)
+bot.polling(none_stop=True)
 
 print("🤖 المطبعة الملحمية تعمل الآن! جاهزة لكتابة المجلدات الضخمة...")
-bot.infinity_polling(timeout=90, long_polling_timeout=90) # زدنا وقت الانتظار لتجنب انقطاع تليجرام
+bot.infinity_polling(timeout=90, long_polling_timeout=90)  زدنا وقت الانتظار لتجنب انقطاع تليجرام
